@@ -29,8 +29,8 @@ function randomCardinalDirection() {
 }
 
 function randomSpeed(direction) {
-  var speed = getRandomInt(10, 30);
-  if (direction === cardinalDirections.south || cardinalDirections.west) {
+  var speed = getRandomInt(2, 35);
+  if (direction === cardinalDirections.south || direction === cardinalDirections.west) {
     return speed * -1;
   } else {
     return speed;
@@ -77,7 +77,7 @@ function enemyMove(enemy) {
   }
 
   if (enemy.x < 0 || enemy.x > WIDTH || enemy.y < 0 || enemy.y > HEIGHT) {
-    enemies[enemy.id] = initializeEnemy();
+    enemies[enemy.id] = initializeEnemy(enemy.id);
   }
 }
 
@@ -92,8 +92,7 @@ for (var i = 0; i < 20; i++) {
 function init() {
   canvas = document.getElementById("canvas");
   ctx = canvas.getContext("2d");
-  setInterval(drawPlayer, 10);
-  setInterval(drawEnemies, 500);
+  setInterval(drawEnemies, 75);
 }
 
 function rect(x, y, w, h) {
@@ -107,10 +106,6 @@ function rect(x, y, w, h) {
 
 function clear() {
   ctx.clearRect(0, 0, WIDTH, HEIGHT);
-}
-
-function drawPlayer() {
-  player.draw();
 }
 
 function drawEnemies() {
