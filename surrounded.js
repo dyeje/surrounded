@@ -1,10 +1,14 @@
-//initializations
+var canvas = document.getElementById("canvas"),
+  ctx = canvas.getContext("2d"),
+  sideLength = 600,
+  speed = 2,
+  friction = 0.97,
+  keys = [],
+  currentEnemySet = 1,
+  enemies = [];
 
-var canvas;
-var ctx;
-var WIDTH = 600;
-var HEIGHT = 600;
-var enemies = [];
+canvas.width = canvas.height = sideLength;
+
 var cardinalDirections = {
   north: 1,
   south: 2,
@@ -12,17 +16,12 @@ var cardinalDirections = {
   west: 4
 }
 
-function init() {
-  canvas = document.getElementById("canvas");
-  ctx = canvas.getContext("2d");
-  setInterval(drawEnemies, 75);
+var player = {
+  velocityX: 0,
+  velocityY: 0,
+  x: (sideLength / 2),
+  y: (sideLength / 2)
 }
-
-for (var i = 0; i < 20; i++) {
-  enemies.push(initializeEnemy(i));
-} 
-
-//drawing utilities
 
 function rect(x, y, w, h) {
   ctx.beginPath();
@@ -33,12 +32,6 @@ function rect(x, y, w, h) {
   ctx.stroke();
 }
 
-function clear() {
-  ctx.clearRect(0, 0, WIDTH, HEIGHT);
-}
-
-//random utilities
-
 function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
@@ -48,7 +41,8 @@ function randomCardinalDirection() {
 }
 
 function randomSpeed(direction) {
-  var speed = getRandomInt(2, 35);
+  var speed = getRandomInt(2, 6);
+  speed = speed / 2;
   if (direction === cardinalDirections.south || direction === cardinalDirections.west) {
     return speed * -1;
   } else {
@@ -57,67 +51,20 @@ function randomSpeed(direction) {
 }
 
 function randomSize() {
-  return getRandomInt(10, 40);
+  return getRandomInt(2, 50);
 }
 
-function randomStartingCoordinates(cardinalDirection) {
+function randomStartingCoordinates(cardinalDirection, enemySize) {
   if (cardinalDirection === cardinalDirections.north) {
-    return {x: getRandomInt(0, WIDTH), y: 0};
+    return {x: getRandomInt(0, sideLength), y: (0 - enemySize)};
   } else if (cardinalDirection === cardinalDirections.south) {
-    return {x: getRandomInt(0, WIDTH), y: HEIGHT};
+    return {x: getRandomInt(0, sideLength), y: sideLength};
   } else if (cardinalDirection === cardinalDirections.east) {
-    return {x: 0, y: getRandomInt(0, HEIGHT)};
+    return {x: (0 - enemySize), y: getRandomInt(0, sideLength)};
   } else if (cardinalDirection === cardinalDirections.west) {
-    return {x: WIDTH, y: getRandomInt(0, HEIGHT)};
+    return {x: sideLength, y: getRandomInt(0, sideLength)};
   }
 } 
-
-//player section
-
-var player = {
-  velocityX: 5,
-  velocityY: 5,
-  x: 300,
-  y: 300
-}
-
-player.draw = function () {
-  rect(player.x, player.y, 10, 10);
-}
-
-function keyDown(e) {
-  e.preventDefault();
-  switch (e.keyCode) {
-  case 38:
-    /* Up arrow was pressed */
-    if (player.y - player.velocityY > 0) {
-      player.y -= player.velocityY;
-    }
-    break;
-  case 40:
-    /* Down arrow was pressed */
-    if (player.y + player.velocityY < HEIGHT) {
-      player.y += player.velocityY;
-    }
-    break;
-  case 37:
-    /* Left arrow was pressed */
-    if (player.x - player.velocityX > 0) {
-      player.x -= player.velocityX;
-    }
-    break;
-  case 39:
-    /* Right arrow was pressed */
-    if (player.x + player.velocityX < WIDTH) {
-      player.x += player.velocityX;
-    }
-    break;
-  }
-}
-
-window.addEventListener('keydown', keyDown, true);
-
-//enemy section
 
 function initializeEnemy(id) {
   var enemy = {
@@ -126,7 +73,7 @@ function initializeEnemy(id) {
     size: randomSize()
   }
 
-  var startingCoordinates = randomStartingCoordinates(enemy.direction);
+  var startingCoordinates = randomStartingCoordinates(enemy.direction, enemy.size);
 
   enemy.x = startingCoordinates.x;
   enemy.y = startingCoordinates.y;
@@ -142,23 +89,78 @@ function enemyMove(enemy) {
     enemy.y = enemy.y + enemy.speed;
   }
 
-  if (enemy.x < 0 || enemy.x > WIDTH || enemy.y < 0 || enemy.y > HEIGHT) {
+  if ((enemy.x + enemy.size) < 0 || enemy.x > sideLength || (enemy.y + enemy.size) < 0 || enemy.y > sideLength) {
     enemies[enemy.id] = initializeEnemy(enemy.id);
   }
 }
 
 function enemyDraw(enemy) {
   rect(enemy.x, enemy.y, enemy.size, enemy.size);
+}
+
+for (var i = 0; i < 15; i++) {
+  enemies.push(initializeEnemy(i));
 } 
 
-function drawEnemies() {
-  clear();
-  player.draw();
+function update() {
+
+  if (keys[38]) {
+    if (player.velocityY > -speed) {
+      player.velocityY--;
+    }
+  }
+  
+  if (keys[40]) {
+    if (player.velocityY < speed) {
+      player.velocityY++;
+    }
+  }
+  if (keys[39]) {
+    if (player.velocityX < speed) {
+      player.velocityX++;
+    }
+  }
+  if (keys[37]) {
+    if (player.velocityX > -speed) {
+      player.velocityX--;
+    }
+  }
+
+  player.velocityY *= friction;
+  player.y += player.velocityY;
+  player.velocityX *= friction;
+  player.x += player.velocityX;
+
+  if (player.x >= (sideLength - 5)) {
+    player.x = (sideLength - 5);
+  } else if (player.x <= 5) {
+    player.x = 5;
+  }
+
+  if (player.y > (sideLength - 5)) {
+    player.y = (sideLength - 5);
+  } else if (player.y <= 5) {
+    player.y = 5;
+  }
+
+  ctx.clearRect(0, 0, 600, 600);
+  ctx.beginPath();
+  ctx.arc(player.x, player.y, 5, 0, Math.PI * 2);
+  ctx.fill();
+
   for (i = 0; i < enemies.length; ++i) {
     enemyMove(enemies[i]);
     enemyDraw(enemies[i]);
   }
+
+  setTimeout(update, 10);
 }
 
-init();
-window.addEventListener('keydown', keyDown, true);
+update();
+
+document.body.addEventListener("keydown", function (e) {
+    keys[e.keyCode] = true;
+});
+document.body.addEventListener("keyup", function (e) {
+    keys[e.keyCode] = false;
+});
