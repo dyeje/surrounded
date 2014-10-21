@@ -2,7 +2,7 @@ var canvas = document.getElementById("canvas"),
   ctx = canvas.getContext("2d"),
   sideLength = 600,
   speed = 2,
-  friction = 0.97,
+  friction = 0.90,
   keys = [],
   currentEnemySet = 1,
   enemies = [];
@@ -20,7 +20,8 @@ var player = {
   velocityX: 0,
   velocityY: 0,
   x: (sideLength / 2),
-  y: (sideLength / 2)
+  y: (sideLength / 2),
+  size: 8
 }
 
 function rect(x, y, w, h) {
@@ -74,12 +75,22 @@ function initializeEnemy(id) {
   }
 
   var startingCoordinates = randomStartingCoordinates(enemy.direction, enemy.size);
-
   enemy.x = startingCoordinates.x;
   enemy.y = startingCoordinates.y;
+
   enemy.speed = randomSpeed(enemy.direction);
 
   return enemy;
+}
+
+function enemyPlayerCollision(enemy) {
+  //something isn't quite right here
+  return !(
+    ((enemy.y + enemy.size) < (player.y)) ||
+    (enemy.y > (player.y + player.size)) ||
+    ((enemy.x + enemy.size) < player.x) ||
+    (enemy.x > (player.x + player.size))
+  );
 }
 
 function enemyMove(enemy) {
@@ -87,6 +98,18 @@ function enemyMove(enemy) {
     enemy.x = enemy.x + enemy.speed;
   } else {
     enemy.y = enemy.y + enemy.speed;
+  }
+
+  if (enemyPlayerCollision(enemy)) {
+    if (enemy.size < player.size) {
+      enemies[enemy.id] = initializeEnemy(enemy.id);
+      player.size += (enemy.size / 2.0);
+    } else {
+      player.size = Math.max(
+        1,
+        (player.size - 1)
+      );
+    }
   }
 
   if ((enemy.x + enemy.size) < 0 || enemy.x > sideLength || (enemy.y + enemy.size) < 0 || enemy.y > sideLength) {
@@ -103,7 +126,6 @@ for (var i = 0; i < 15; i++) {
 } 
 
 function update() {
-
   if (keys[38]) {
     if (player.velocityY > -speed) {
       player.velocityY--;
@@ -145,7 +167,7 @@ function update() {
 
   ctx.clearRect(0, 0, 600, 600);
   ctx.beginPath();
-  ctx.arc(player.x, player.y, 5, 0, Math.PI * 2);
+  ctx.arc(player.x, player.y, player.size, 0, Math.PI * 2);
   ctx.fill();
 
   for (i = 0; i < enemies.length; ++i) {
