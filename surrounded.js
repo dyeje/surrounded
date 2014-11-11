@@ -1,10 +1,9 @@
 var canvas = document.getElementById("canvas"),
   ctx = canvas.getContext("2d"),
   sideLength = 600,
-  speed = 2,
-  friction = 0.90,
+  speed = 2.6,
+  friction = 0.88,
   keys = [],
-  currentEnemySet = 1,
   enemies = [];
 
 canvas.width = canvas.height = sideLength;
@@ -52,7 +51,7 @@ function randomSpeed(direction) {
 }
 
 function randomSize() {
-  return getRandomInt(2, 50);
+  return getRandomInt(2, 60);
 }
 
 function randomStartingCoordinates(cardinalDirection, enemySize) {
@@ -84,13 +83,22 @@ function initializeEnemy(id) {
 }
 
 function enemyPlayerCollision(enemy) {
-  //something isn't quite right here
-  return !(
-    ((enemy.y + enemy.size) < (player.y)) ||
-    (enemy.y > (player.y + player.size)) ||
-    ((enemy.x + enemy.size) < player.x) ||
-    (enemy.x > (player.x + player.size))
-  );
+  var playerRadius = player.size/2
+
+  var distX = Math.abs(player.x - enemy.x-enemy.size/2);
+  var distY = Math.abs(player.y - enemy.y-enemy.size/2);
+
+  if (distX > (enemy.size/2 + playerRadius) || distX > (enemy.size/2 + playerRadius)) {
+    return false;
+  }
+
+  if (distX <= (enemy.size/2) || distY <= (enemy.size/2)) {
+    return true;
+  }
+
+  var dx = distX - enemy.size/2;
+  var dy = distY - enemy.size/2;
+  return ((dx*dx)+(dy*dy) <= (playerRadius*playerRadius));
 }
 
 function enemyMove(enemy) {
@@ -103,12 +111,9 @@ function enemyMove(enemy) {
   if (enemyPlayerCollision(enemy)) {
     if (enemy.size < player.size) {
       enemies[enemy.id] = initializeEnemy(enemy.id);
-      player.size += (enemy.size / 2.0);
+      player.size += 1
     } else {
-      player.size = Math.max(
-        1,
-        (player.size - 1)
-      );
+      player.size = Math.max(player.size - 0.5, 2)
     }
   }
 
@@ -121,7 +126,7 @@ function enemyDraw(enemy) {
   rect(enemy.x, enemy.y, enemy.size, enemy.size);
 }
 
-for (var i = 0; i < 15; i++) {
+for (var i = 0; i < 20; i++) {
   enemies.push(initializeEnemy(i));
 } 
 
@@ -167,7 +172,7 @@ function update() {
 
   ctx.clearRect(0, 0, 600, 600);
   ctx.beginPath();
-  ctx.arc(player.x, player.y, player.size, 0, Math.PI * 2);
+  ctx.arc(player.x, player.y, player.size/2, 0, Math.PI * 2);
   ctx.fill();
 
   for (i = 0; i < enemies.length; ++i) {
