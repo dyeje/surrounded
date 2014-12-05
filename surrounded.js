@@ -1,8 +1,8 @@
 var canvas = document.getElementById("canvas"),
   ctx = canvas.getContext("2d"),
   sideLength = 600,
-  speed = 2.6,
-  friction = 0.88,
+  speed = 2.7,
+  friction = 0.89,
   keys = [],
   enemies = [];
 
@@ -18,18 +18,9 @@ var cardinalDirections = {
 var player = {
   velocityX: 0,
   velocityY: 0,
-  x: (sideLength / 2),
-  y: (sideLength / 2),
+  x: sideLength/2,
+  y: sideLength/2,
   size: 8
-}
-
-function rect(x, y, w, h) {
-  ctx.beginPath();
-  ctx.rect(x, y, w, h);
-  ctx.closePath();
-  ctx.fillStyle = "red";
-  ctx.fill();
-  ctx.stroke();
 }
 
 function getRandomInt(min, max) {
@@ -83,22 +74,23 @@ function initializeEnemy(id) {
 }
 
 function enemyPlayerCollision(enemy) {
-  var playerRadius = player.size/2
+  var playerRadius = player.size/2;
+  var enemyCenterX = enemy.x + enemy.size/2;
+  var enemyCenterY = enemy.y + enemy.size/2;
 
-  var distX = Math.abs(player.x - enemy.x-enemy.size/2);
-  var distY = Math.abs(player.y - enemy.y-enemy.size/2);
+  var circleDistance = {};
+  circleDistance.x = Math.abs(player.x - enemyCenterX);
+  circleDistance.y = Math.abs(player.y - enemyCenterY);
 
-  if (distX > (enemy.size/2 + playerRadius) || distX > (enemy.size/2 + playerRadius)) {
-    return false;
-  }
+  if (circleDistance.x > (enemy.size/2 + playerRadius)) { return false; }
+  if (circleDistance.y > (enemy.size/2 + playerRadius)) { return false; }
 
-  if (distX <= (enemy.size/2) || distY <= (enemy.size/2)) {
-    return true;
-  }
+  if (circleDistance.x <= (enemy.size/2)) { return true; } 
+  if (circleDistance.y <= (enemy.size/2)) { return true; }
 
-  var dx = distX - enemy.size/2;
-  var dy = distY - enemy.size/2;
-  return ((dx*dx)+(dy*dy) <= (playerRadius*playerRadius));
+  cornerDistanceSquared = ((circleDistance.x - enemy.size/2)^2) + ((circleDistance.y - enemy.size/2)^2);
+
+  return (cornerDistanceSquared <= (playerRadius^2));
 }
 
 function enemyMove(enemy) {
@@ -123,7 +115,18 @@ function enemyMove(enemy) {
 }
 
 function enemyDraw(enemy) {
-  rect(enemy.x, enemy.y, enemy.size, enemy.size);
+  ctx.beginPath();
+  ctx.rect(enemy.x, enemy.y, enemy.size, enemy.size);
+  ctx.closePath();
+  ctx.fillStyle = "red";
+  ctx.fill();
+  ctx.stroke();
+}
+
+function playerDraw() {
+  ctx.beginPath();
+  ctx.arc(player.x, player.y, player.size/2, 0, Math.PI * 2);
+  ctx.fill();
 }
 
 for (var i = 0; i < 20; i++) {
