@@ -1,8 +1,8 @@
 var canvas = document.getElementById("canvas"),
   ctx = canvas.getContext("2d"),
   sideLength = 600,
-  speed = 2.7,
-  friction = 0.89,
+  speed = 10.0,
+  friction = 0.88,
   keys = [],
   enemies = [];
 
@@ -23,6 +23,16 @@ var player = {
   size: 8
 }
 
+function gameOver() {
+  player = {
+    velocityX: 0,
+    velocityY: 0,
+    x: sideLength/2,
+    y: sideLength/2,
+    size: 8
+  }
+}
+
 function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
@@ -32,7 +42,7 @@ function randomCardinalDirection() {
 }
 
 function randomSpeed(direction) {
-  var speed = getRandomInt(2, 6);
+  var speed = getRandomInt(2, 5);
   speed = speed / 2;
   if (direction === cardinalDirections.south || direction === cardinalDirections.west) {
     return speed * -1;
@@ -60,8 +70,8 @@ function randomStartingCoordinates(cardinalDirection, enemySize) {
 function initializeEnemy(id) {
   var enemy = {
     id: id,
-    direction: randomCardinalDirection(),
-    size: randomSize()
+    size: randomSize(),
+    direction: randomCardinalDirection()
   }
 
   var startingCoordinates = randomStartingCoordinates(enemy.direction, enemy.size);
@@ -105,7 +115,7 @@ function enemyMove(enemy) {
       enemies[enemy.id] = initializeEnemy(enemy.id);
       player.size += 1
     } else {
-      player.size = Math.max(player.size - 0.5, 2)
+      gameOver();
     }
   }
 
@@ -136,23 +146,23 @@ for (var i = 0; i < 20; i++) {
 function update() {
   if (keys[38]) {
     if (player.velocityY > -speed) {
-      player.velocityY--;
+      player.velocityY -= 0.36;
     }
   }
   
   if (keys[40]) {
     if (player.velocityY < speed) {
-      player.velocityY++;
+      player.velocityY += 0.36;
     }
   }
   if (keys[39]) {
     if (player.velocityX < speed) {
-      player.velocityX++;
+      player.velocityX += 0.36;
     }
   }
   if (keys[37]) {
     if (player.velocityX > -speed) {
-      player.velocityX--;
+      player.velocityX -= 0.36;
     }
   }
 
