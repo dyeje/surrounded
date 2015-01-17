@@ -4,7 +4,9 @@ var canvas = document.getElementById("canvas"),
   speed = 10.0,
   friction = 0.88,
   keys = [],
-  enemies = [];
+  enemies = [],
+  gameOver = false,
+  deathTimer = 100;
 
 canvas.width = canvas.height = sideLength;
 
@@ -23,13 +25,9 @@ var player = {
   size: 8
 }
 
-function gameOver() {
-  player = {
-    velocityX: 0,
-    velocityY: 0,
-    x: sideLength/2,
-    y: sideLength/2,
-    size: 8
+function pushEnemies(quantity) {
+  for (var i = 0; i < quantity; i++) {
+    enemies.push(initializeEnemy(i));
   }
 }
 
@@ -110,12 +108,12 @@ function enemyMove(enemy) {
     enemy.y = enemy.y + enemy.speed;
   }
 
-  if (enemyPlayerCollision(enemy)) {
+  if (!gameOver && enemyPlayerCollision(enemy)) {
     if (enemy.size < player.size) {
       enemies[enemy.id] = initializeEnemy(enemy.id);
       player.size += 1
     } else {
-      gameOver();
+      gameOver = true;
     }
   }
 
@@ -138,10 +136,6 @@ function playerDraw() {
   ctx.arc(player.x, player.y, player.size/2, 0, Math.PI * 2);
   ctx.fill();
 }
-
-for (var i = 0; i < 20; i++) {
-  enemies.push(initializeEnemy(i));
-} 
 
 function update() {
   if (keys[38]) {
@@ -188,13 +182,22 @@ function update() {
   ctx.arc(player.x, player.y, player.size/2, 0, Math.PI * 2);
   ctx.fill();
 
-  for (i = 0; i < enemies.length; ++i) {
+  for (i = 0; i < enemies.length; i++) {
     enemyMove(enemies[i]);
     enemyDraw(enemies[i]);
   }
 
-  setTimeout(update, 10);
+  if (gameOver) {
+    deathTimer = deathTimer - 1;
+    pushEnemies(30); 
+  }
+
+  if (deathTimer > 0) {
+    window.setTimeout(update, 10);
+  }
 }
+
+pushEnemies(20);
 
 update();
 
