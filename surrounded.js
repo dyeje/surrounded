@@ -6,7 +6,8 @@ var canvas = document.getElementById("canvas"),
   keys = [],
   enemies = [],
   gameOver = false,
-  deathTimer = 100;
+  updateInterval = 10,
+  deathTimer = 75;
 
 canvas.width = canvas.height = sideLength;
 
@@ -134,6 +135,8 @@ function enemyDraw(enemy) {
 function playerDraw() {
   ctx.beginPath();
   ctx.arc(player.x, player.y, player.size/2, 0, Math.PI * 2);
+  ctx.stroke();
+  ctx.fillStyle = 'red';
   ctx.fill();
 }
 
@@ -178,9 +181,7 @@ function update() {
   }
 
   ctx.clearRect(0, 0, 600, 600);
-  ctx.beginPath();
-  ctx.arc(player.x, player.y, player.size/2, 0, Math.PI * 2);
-  ctx.fill();
+  playerDraw();
 
   for (i = 0; i < enemies.length; i++) {
     enemyMove(enemies[i]);
@@ -189,11 +190,12 @@ function update() {
 
   if (gameOver) {
     deathTimer = deathTimer - 1;
-    pushEnemies(30); 
+    pushEnemies(20);
+    updateInterval += 5/deathTimer;
   }
 
   if (deathTimer > 0) {
-    window.setTimeout(update, 10);
+    window.setTimeout(update, updateInterval);
   }
 }
 
