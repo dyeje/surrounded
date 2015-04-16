@@ -1,29 +1,38 @@
 var canvas = document.getElementById("canvas"),
-  ctx = canvas.getContext("2d"),
-  sideLength = 600,
-  speed = 10.0,
-  friction = 0.88,
-  keys = [],
-  enemies = [],
-  gameOver = false,
-  updateInterval = 10,
-  deathTimer = 75;
+    ctx = canvas.getContext("2d"),
+    keys = [],
+    friction,
+    enemies,
+    player,
+    gameOver,
+    updateInterval,
+    alphaTimer,
+    deathTimer;
 
-canvas.width = canvas.height = sideLength;
+//constants
+var VELOCITY_INTERVAL = 0.36,
+    INITIAL_FRICTION = 0.88,
+    FRICTION_INTERVAL = 0.04,
+    INITIAL_UPDATE_INTERVAL = 10,
+    INITIAL_ALPHA_TIMER = 100,
+    INITIAL_DEATH_TIMER = 85,
+    SIDE_LENGTH = 600,
+    PLAYER_SPEED = 10,
+    INITIAL_PLAYER_SIZE = 8,
+    //keys
+    UP_ARROW = 38,
+    DOWN_ARROW = 40,
+    LEFT_ARROW = 37,
+    RIGHT_ARROW = 39,
+    SPACE_BAR = 32;
+
+canvas.width = canvas.height = SIDE_LENGTH;
 
 var cardinalDirections = {
   north: 1,
   south: 2,
   east: 3,
   west: 4
-}
-
-var player = {
-  velocityX: 0,
-  velocityY: 0,
-  x: sideLength/2,
-  y: sideLength/2,
-  size: 8
 }
 
 function pushEnemies(quantity) {
@@ -56,13 +65,13 @@ function randomSize() {
 
 function randomStartingCoordinates(cardinalDirection, enemySize) {
   if (cardinalDirection === cardinalDirections.north) {
-    return {x: getRandomInt(0, sideLength), y: (0 - enemySize)};
+    return {x: getRandomInt(0, SIDE_LENGTH), y: (0 - enemySize)};
   } else if (cardinalDirection === cardinalDirections.south) {
-    return {x: getRandomInt(0, sideLength), y: sideLength};
+    return {x: getRandomInt(0, SIDE_LENGTH), y: SIDE_LENGTH};
   } else if (cardinalDirection === cardinalDirections.east) {
-    return {x: (0 - enemySize), y: getRandomInt(0, sideLength)};
+    return {x: (0 - enemySize), y: getRandomInt(0, SIDE_LENGTH)};
   } else if (cardinalDirection === cardinalDirections.west) {
-    return {x: sideLength, y: getRandomInt(0, sideLength)};
+    return {x: SIDE_LENGTH, y: getRandomInt(0, SIDE_LENGTH)};
   }
 } 
 
@@ -118,7 +127,7 @@ function enemyMove(enemy) {
     }
   }
 
-  if ((enemy.x + enemy.size) < 0 || enemy.x > sideLength || (enemy.y + enemy.size) < 0 || enemy.y > sideLength) {
+  if ((enemy.x + enemy.size) < 0 || enemy.x > SIDE_LENGTH || (enemy.y + enemy.size) < 0 || enemy.y > SIDE_LENGTH) {
     enemies[enemy.id] = initializeEnemy(enemy.id);
   }
 }
@@ -132,6 +141,17 @@ function enemyDraw(enemy) {
   ctx.stroke();
 }
 
+function initializePlayer() {
+  player = {
+    velocityX: 0,
+    velocityY: 0,
+    x: SIDE_LENGTH/2,
+    y: SIDE_LENGTH/2,
+    size: INITIAL_PLAYER_SIZE,
+    speed: PLAYER_SPEED
+  }
+}
+
 function playerDraw() {
   ctx.beginPath();
   ctx.arc(player.x, player.y, player.size/2, 0, Math.PI * 2);
@@ -140,47 +160,92 @@ function playerDraw() {
   ctx.fill();
 }
 
-function update() {
-  if (keys[38]) {
-    if (player.velocityY > -speed) {
-      player.velocityY -= 0.36;
+function playerMove() {
+  if (!gameOver) {
+    if (keys[UP_ARROW]) {
+      console.log(38);
+      if (player.velocityY > -player.speed) {
+        player.velocityY -= VELOCITY_INTERVAL;
+      }
     }
-  }
-  
-  if (keys[40]) {
-    if (player.velocityY < speed) {
-      player.velocityY += 0.36;
+
+    if (keys[DOWN_ARROW]) {
+      console.log(40);
+      if (player.velocityY < player.speed) {
+        player.velocityY += VELOCITY_INTERVAL;
+      }
     }
-  }
-  if (keys[39]) {
-    if (player.velocityX < speed) {
-      player.velocityX += 0.36;
+
+    if (keys[LEFT_ARROW]) {
+      console.log(37);
+      if (player.velocityX > -player.speed) {
+        player.velocityX -= VELOCITY_INTERVAL;
+      }
     }
-  }
-  if (keys[37]) {
-    if (player.velocityX > -speed) {
-      player.velocityX -= 0.36;
+
+    if (keys[RIGHT_ARROW]) {
+      console.log(39);
+      if (player.velocityX < player.speed) {
+        player.velocityX += VELOCITY_INTERVAL;
+      }
     }
   }
 
   player.velocityY *= friction;
   player.y += player.velocityY;
+
   player.velocityX *= friction;
   player.x += player.velocityX;
 
-  if (player.x >= (sideLength - 5)) {
-    player.x = (sideLength - 5);
-  } else if (player.x <= 5) {
-    player.x = 5;
+  playerRadius = player.size/2
+
+  if (player.x >= (SIDE_LENGTH - playerRadius)) {
+    player.x = (SIDE_LENGTH - playerRadius);
+  } else if (player.x <= playerRadius) {
+    player.x = playerRadius;
   }
 
-  if (player.y > (sideLength - 5)) {
-    player.y = (sideLength - 5);
-  } else if (player.y <= 5) {
-    player.y = 5;
+  if (player.y > (SIDE_LENGTH - playerRadius)) {
+    player.y = (SIDE_LENGTH - playerRadius);
+  } else if (player.y <= playerRadius) {
+    player.y = playerRadius;
   }
+}
 
-  ctx.clearRect(0, 0, 600, 600);
+function drawText(text, alpha, alignment, x, y) {
+  ctx.fillStyle = "rgba(0, 0, 0, " + alpha + ")";
+  ctx.font = "20pt Helvetica";
+  ctx.textAlign = alignment; 
+  ctx.fillText(text, x, y);
+}
+
+function fadeInGameOverText() {
+  if (deathTimer <= 50) {
+    drawText("You've been surrounded!", (1.0 - (alphaTimer * 0.01)), "center", SIDE_LENGTH/2, 275);
+    drawText("Press the space bar to try again.", (1.0 - (alphaTimer * 0.01)), "center", SIDE_LENGTH/2, 305);
+    alphaTimer -= 2;
+  }
+}
+
+function setupGame() {
+  enemies = [];
+  pushEnemies(20);
+
+  updateInterval = INITIAL_UPDATE_INTERVAL;
+  alphaTimer = INITIAL_ALPHA_TIMER;
+  deathTimer = INITIAL_DEATH_TIMER;
+  friction = INITIAL_FRICTION;
+
+  gameOver = false;
+
+  initializePlayer();
+
+  update();
+}
+
+function update() {
+  ctx.clearRect(0, 0, SIDE_LENGTH, SIDE_LENGTH);
+  playerMove();
   playerDraw();
 
   for (i = 0; i < enemies.length; i++) {
@@ -189,9 +254,15 @@ function update() {
   }
 
   if (gameOver) {
-    deathTimer = deathTimer - 1;
+    fadeInGameOverText()
+
+    if (friction < 0.96) {
+      friction += FRICTION_INTERVAL;
+    }
+
+    deathTimer -= 1;
     pushEnemies(20);
-    updateInterval += 5/deathTimer;
+    updateInterval += 5.0/deathTimer;
   }
 
   if (deathTimer > 0) {
@@ -199,13 +270,16 @@ function update() {
   }
 }
 
-pushEnemies(20);
-
-update();
-
 document.body.addEventListener("keydown", function (e) {
     keys[e.keyCode] = true;
+
+    if (gameOver && keys[SPACE_BAR]) {
+      setupGame();
+    }
 });
+
 document.body.addEventListener("keyup", function (e) {
     keys[e.keyCode] = false;
 });
+
+setupGame();
