@@ -12,8 +12,7 @@ function initializePlayer() {
 function playerDraw() {
   ctx.beginPath();
   ctx.arc(player.x, player.y, player.size/2, 0, Math.PI * 2);
-  ctx.stroke();
-  ctx.fillStyle = 'red';
+  ctx.fillStyle = PLAYER_COLOR;
   ctx.fill();
 }
 

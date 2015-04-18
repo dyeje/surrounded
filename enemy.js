@@ -1,3 +1,9 @@
+enemyColors = {
+  1: "#F27331",
+  2: "#D94B2B",
+  3: "#BF3636"
+}
+
 function pushEnemies(quantity) {
   for (var i = 0; i < quantity; i++) {
     enemies.push(initializeEnemy(i));
@@ -8,7 +14,8 @@ function initializeEnemy(id) {
   var enemy = {
     id: id,
     size: randomSize(),
-    direction: randomCardinalDirection()
+    direction: randomCardinalDirection(),
+    color: enemyColors[getRandomInt(1, 3)]
   }
 
   var startingCoordinates = randomStartingCoordinates(enemy.direction, enemy.size);
@@ -65,7 +72,6 @@ function enemyDraw(enemy) {
   ctx.beginPath();
   ctx.rect(enemy.x, enemy.y, enemy.size, enemy.size);
   ctx.closePath();
-  ctx.fillStyle = "red";
+  ctx.fillStyle = enemy.color;
   ctx.fill();
-  ctx.stroke();
 }

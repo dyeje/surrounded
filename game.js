@@ -9,13 +9,20 @@ var canvas = document.getElementById("canvas"),
     alphaTimer,
     deathTimer;
 
-//constants
-var 
+
+var //constants 
+  PLAYER_COLOR = "#F2CE44"
   VELOCITY_INTERVAL = 0.36,
-  INITIAL_FRICTION = 0.88,
-  FRICTION_INTERVAL = 0.04,
+  INITIAL_FRICTION = 0.90,
+  FRICTION_INTERVAL = 0.03,
   SIDE_LENGTH = 600,
   PLAYER_SPEED = 10,
+  DIRECTIONS = {
+    up: 1,
+    down: 2,
+    right: 3,
+    left: 4
+  },
   //initial values
   INITIAL_UPDATE_INTERVAL = 10,
   INITIAL_PLAYER_SIZE = 8,
@@ -27,20 +34,14 @@ var
   DOWN_ARROW = 40,
   LEFT_ARROW = 37,
   RIGHT_ARROW = 39,
-  SPACE_BAR = 32,
-  DIRECTIONS = {
-    up: 1,
-    down: 2,
-    right: 3,
-    left: 4
-  };
+  SPACE_BAR = 32;
 
 canvas.width = canvas.height = SIDE_LENGTH;
 
 function drawText(text, alpha, alignment, x, y) {
-  ctx.fillStyle = "rgba(0, 0, 0, " + alpha + ")";
+  ctx.fillStyle = "rgba(250, 250, 250, " + alpha + ")";
   ctx.font = "20pt Helvetica";
-  ctx.textAlign = alignment; 
+  ctx.textAlign = alignment;
   ctx.fillText(text, x, y);
 }
 
