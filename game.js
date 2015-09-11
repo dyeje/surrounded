@@ -7,7 +7,8 @@ var canvas = document.getElementById("canvas"),
     gameOver,
     updateInterval,
     alphaTimer,
-    deathTimer;
+    deathTimer,
+    gameTimeout;
 
 
 var //constants 
@@ -54,6 +55,9 @@ function fadeInGameOverText() {
 }
 
 function setupGame() {
+  clearTimeout(gameTimeout);
+  gameOver = false;
+
   enemies = [];
   pushEnemies(20);
 
@@ -61,8 +65,6 @@ function setupGame() {
   alphaTimer = INITIAL_ALPHA_TIMER;
   deathTimer = INITIAL_DEATH_TIMER;
   friction = INITIAL_FRICTION;
-
-  gameOver = false;
 
   initializePlayer();
 
@@ -92,7 +94,7 @@ function update() {
   }
 
   if (deathTimer > 0) {
-    window.setTimeout(update, updateInterval);
+    gameTimeout = window.setTimeout(update, updateInterval);
   }
 }
 

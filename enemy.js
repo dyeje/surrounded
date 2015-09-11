@@ -42,7 +42,7 @@ function enemyPlayerCollision(enemy) {
   if (circleDistance.x <= (enemy.size/2)) { return true; } 
   if (circleDistance.y <= (enemy.size/2)) { return true; }
 
-  cornerDistanceSquared = ((circleDistance.x - enemy.size/2)^2) + ((circleDistance.y - enemy.size/2)^2);
+  var cornerDistanceSquared = ((circleDistance.x - enemy.size/2)^2) + ((circleDistance.y - enemy.size/2)^2);
 
   return (cornerDistanceSquared <= (playerRadius^2));
 }
