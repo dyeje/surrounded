@@ -11,8 +11,9 @@
   margin-left: -300px;
   margin-top: 10px;
   background: #2C4552;
+  border: 5px solid black;
 }
 
-/*body {
-  background-color:#337CA0;
-}*/
+body {
+  background-color: #2C4552;
+}
