@@ -40,16 +40,16 @@ var //constants
 canvas.width = canvas.height = SIDE_LENGTH;
 
 function drawText(text, alpha, alignment, x, y) {
-  ctx.fillStyle = "rgba(250, 250, 250, " + alpha + ")";
-  ctx.font = "20pt Helvetica";
+  ctx.fillStyle = "rgba(240, 240, 240, " + alpha + ")";
+  ctx.font = "30pt unlearne";
   ctx.textAlign = alignment;
   ctx.fillText(text, x, y);
 }
 
 function fadeInGameOverText() {
   if (deathTimer <= 50) {
-    drawText("You've been surrounded!", (1.0 - (alphaTimer * 0.01)), "center", SIDE_LENGTH/2, 275);
-    drawText("Press the space bar to try again.", (1.0 - (alphaTimer * 0.01)), "center", SIDE_LENGTH/2, 305);
+    drawText("surrounded!", (1.0 - (alphaTimer * 0.01)), "center", SIDE_LENGTH/2, 275);
+    drawText("press space to try again.", (1.0 - (alphaTimer * 0.01)), "center", SIDE_LENGTH/2, 305);
     alphaTimer -= 2;
   }
 }

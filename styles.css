@@ -1,0 +1,18 @@
+@font-face {
+  font-family: 'unlearne';
+  src: url('./fonts/unlearne.ttf');
+}
+
+#canvas {
+  left: 50%;
+  width: 600px;
+  height: 600px;
+  position: fixed;
+  margin-left: -300px;
+  margin-top: 10px;
+  background: #2C4552;
+}
+
+/*body {
+  background-color:#337CA0;
+}*/
