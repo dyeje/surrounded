@@ -3,17 +3,26 @@
   src: url('./fonts/unlearne.ttf');
 }
 
+h1 {
+  text-align: center;
+  font-family: 'unlearne';
+  font-size: 3em;
+  margin-bottom: 8px;
+  background-color: #F0F0F0;
+}
+
 #canvas {
   left: 50%;
   width: 600px;
   height: 600px;
   position: fixed;
   margin-left: -300px;
-  margin-top: 10px;
   background: #2C4552;
   border: 5px solid black;
 }
 
 body {
-  background-color: #2C4552;
+  margin-left: 0px;
+  margin-right: 0px;
+  background-color: #3F6273;
 }
