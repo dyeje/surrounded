@@ -1,10 +1,10 @@
 var canvas = document.getElementById("canvas"),
     ctx = canvas.getContext("2d"),
+    gameOver = true,
     keys = [],
     friction,
     enemies,
     player,
-    gameOver,
     updateInterval,
     alphaTimer,
     deathTimer,
@@ -110,4 +110,4 @@ document.body.addEventListener("keyup", function (e) {
     keys[e.keyCode] = false;
 });
 
-setupGame();
+drawInstructions();
