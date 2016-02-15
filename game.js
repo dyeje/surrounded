@@ -39,19 +39,51 @@ var //constants
 
 canvas.width = canvas.height = SIDE_LENGTH;
 
-function drawText(text, alpha, alignment, x, y) {
-  ctx.fillStyle = "rgba(240, 240, 240, " + alpha + ")";
-  ctx.font = "30pt unlearne";
+function drawText(text, alpha, alignment, x, y, size) {
+  ctx.fillStyle = "#f2f2f2";
+  ctx.globalAlpha = (1.0 - (alphaTimer * 0.01));
+  ctx.font = size + "pt unlearne";
   ctx.textAlign = alignment;
   ctx.fillText(text, x, y);
+  ctx.globalAlpha = 1;
 }
 
 function fadeInGameOverText() {
   if (deathTimer <= 50) {
-    drawText("surrounded!", (1.0 - (alphaTimer * 0.01)), "center", SIDE_LENGTH/2, 275);
-    drawText("press space to try again.", (1.0 - (alphaTimer * 0.01)), "center", SIDE_LENGTH/2, 305);
+    drawText("surrounded!", 100, "center", SIDE_LENGTH/2, 275, 30);
+    drawText("press space to try again.", (1.0 - (alphaTimer * 0.01)), "center", SIDE_LENGTH/2, 305, 30);
     alphaTimer -= 2;
   }
+}
+
+function drawInstructions() {
+  drawText("this is you.", 100, "center", SIDE_LENGTH/2, 50, 28);
+  initializePlayer();
+  player.x = SIDE_LENGTH/2;
+  player.y = 90;
+  playerDraw();
+
+  drawText("this is an enemy.", 100, "center", SIDE_LENGTH/2, 175, 28);
+  var instructionsEnemy = {x: (SIDE_LENGTH/2) - 10, y: 212, size: 20, color: enemyColors[2]}
+  enemyDraw(instructionsEnemy);
+
+  drawText("eat enemies smaller than you.", 100, "center", SIDE_LENGTH/2, 300, 28);
+  player.size = 30;
+  player.x = (SIDE_LENGTH/2) - 20;
+  player.y = 350;
+  playerDraw();
+  instructionsEnemy.size = 10
+  instructionsEnemy.x = (SIDE_LENGTH/2) + 20
+  instructionsEnemy.y = 344
+  enemyDraw(instructionsEnemy);
+
+  drawText("press space to start!", 100, "center", SIDE_LENGTH/2, 500, 38);
+  setInterval(function () {
+    ctx.clearRect(0, 400, SIDE_LENGTH, SIDE_LENGTH);
+    setTimeout(function () {
+      drawText("press space to start!", 100, "center", SIDE_LENGTH/2, 500, 38);
+    }, 200)
+  }, 2400)
 }
 
 function setupGame() {
@@ -110,4 +142,4 @@ document.body.addEventListener("keyup", function (e) {
     keys[e.keyCode] = false;
 });
 
-drawInstructions();
+setTimeout(drawInstructions, 1); //let's the custom font load
