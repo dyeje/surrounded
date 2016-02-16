@@ -32,9 +32,13 @@ var //constants
   INITIAL_FRICTION = 0.88,
   //keys
   UP_ARROW = 38,
+  W_KEY = 87;
   DOWN_ARROW = 40,
+  S_KEY = 83
   LEFT_ARROW = 37,
+  A_KEY = 65,
   RIGHT_ARROW = 39,
+  D_KEY = 68,
   SPACE_BAR = 32;
 
 canvas.width = canvas.height = SIDE_LENGTH;
@@ -131,6 +135,7 @@ function update() {
 }
 
 document.body.addEventListener("keydown", function (e) {
+  console.log(e.keyCode);
     keys[e.keyCode] = true;
 
     if (gameOver && keys[SPACE_BAR]) {

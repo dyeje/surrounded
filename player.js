@@ -18,25 +18,25 @@ function playerDraw() {
 
 function playerMove() {
   if (!gameOver) {
-    if (keys[UP_ARROW]) {
+    if (keys[UP_ARROW] || keys[W_KEY]) {
       if (player.velocityY > -player.speed) {
         player.velocityY -= VELOCITY_INTERVAL;
       }
     }
 
-    if (keys[DOWN_ARROW]) {
+    if (keys[DOWN_ARROW] || keys[S_KEY]) {
       if (player.velocityY < player.speed) {
         player.velocityY += VELOCITY_INTERVAL;
       }
     }
 
-    if (keys[LEFT_ARROW]) {
+    if (keys[LEFT_ARROW] || keys[A_KEY]) {
       if (player.velocityX > -player.speed) {
         player.velocityX -= VELOCITY_INTERVAL;
       }
     }
 
-    if (keys[RIGHT_ARROW]) {
+    if (keys[RIGHT_ARROW] || keys[D_KEY]) {
       if (player.velocityX < player.speed) {
         player.velocityX += VELOCITY_INTERVAL;
       }
