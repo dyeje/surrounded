@@ -78,8 +78,6 @@ function update() {
   }
 
   if (gameOver) {
-    fadeInGameOverText();
-
     if (friction < 0.96) {
       friction += FRICTION_INTERVAL;
     }
@@ -93,6 +91,7 @@ function update() {
 
     deathTimer -= 1;
     updateInterval += 5.0/deathTimer;
+    fadeInGameOverText();
   }
 
   if (deathTimer > 0) {
