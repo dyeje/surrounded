@@ -19,8 +19,8 @@ function drawText(text, y, size, alpha) {
 
 function fadeInGameOverText() {
   if (deathTimer <= 50) {
-    console.log(fadeInAlpha());
-    drawText("surrounded!", 275, 30, fadeInAlpha());
+    var gameOverText = victory ? "victory!" : "surrounded!";
+    drawText(gameOverText, 275, 30, fadeInAlpha());
     drawText("press space to try again.", 305, 30, fadeInAlpha());
     alphaTimer -= 2;
   }

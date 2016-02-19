@@ -1,6 +1,7 @@
 var canvas = document.getElementById("canvas"),
     ctx = canvas.getContext("2d"),
     gameOver = true,
+    victory = false,
     keys = [],
     friction,
     enemies,
@@ -13,7 +14,8 @@ var canvas = document.getElementById("canvas"),
 
 
 var //constants 
-  PLAYER_COLOR = "#F2CE44"
+  PLAYER_COLOR = "#F2CE44",
+  MAX_ENEMY_SIZE = 70,
   VELOCITY_INTERVAL = 0.36,
   INITIAL_FRICTION = 0.90,
   FRICTION_INTERVAL = 0.03,
@@ -27,7 +29,7 @@ var //constants
   },
   //initial values
   INITIAL_UPDATE_INTERVAL = 10,
-  INITIAL_PLAYER_SIZE = 8,
+  INITIAL_PLAYER_SIZE = 6,
   INITIAL_ALPHA_TIMER = 100,
   INITIAL_DEATH_TIMER = 85,
   INITIAL_FRICTION = 0.88,
@@ -48,6 +50,7 @@ function setupGame() {
   clearTimeout(gameTimeout);
   clearInterval(instructionsInterval);
 
+  victory = false;
   gameOver = false;
 
   enemies = [];
@@ -65,6 +68,7 @@ function setupGame() {
 
 function update() {
   ctx.clearRect(0, 0, SIDE_LENGTH, SIDE_LENGTH);
+
   playerMove();
   playerDraw();
 
@@ -74,14 +78,20 @@ function update() {
   }
 
   if (gameOver) {
-    fadeInGameOverText()
+    fadeInGameOverText();
 
     if (friction < 0.96) {
       friction += FRICTION_INTERVAL;
     }
 
+    if (!victory) {
+      pushEnemies(20);
+    } else {
+      playerDraw();
+      player.size += 2;
+    }
+
     deathTimer -= 1;
-    pushEnemies(20);
     updateInterval += 5.0/deathTimer;
   }
 

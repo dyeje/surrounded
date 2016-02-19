@@ -17,7 +17,7 @@ function randomSpeed(direction) {
 }
 
 function randomSize() {
-  return getRandomInt(2, 60);
+  return getRandomInt(2, MAX_ENEMY_SIZE);
 }
 
 function randomStartingCoordinates(cardinalDirection, enemySize) {

@@ -57,7 +57,12 @@ function enemyMove(enemy) {
   if (!gameOver && enemyPlayerCollision(enemy)) {
     if (enemy.size < player.size) {
       enemies[enemy.id] = initializeEnemy(enemy.id);
-      player.size += 1
+      player.size += 1;
+
+      if (player.size > MAX_ENEMY_SIZE + 30) {
+        victory = true;
+        gameOver = true;
+      }
     } else {
       gameOver = true;
     }
