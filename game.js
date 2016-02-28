@@ -15,7 +15,7 @@ var canvas = document.getElementById("canvas"),
 
 var //constants 
   PLAYER_COLOR = "#F2CE44",
-  MAX_ENEMY_SIZE = 70,
+  MAX_ENEMY_SIZE = 80,
   VELOCITY_INTERVAL = 0.36,
   INITIAL_FRICTION = 0.90,
   FRICTION_INTERVAL = 0.03,
@@ -29,7 +29,7 @@ var //constants
   },
   //initial values
   INITIAL_UPDATE_INTERVAL = 10,
-  INITIAL_PLAYER_SIZE = 6,
+  INITIAL_PLAYER_SIZE = 8,
   INITIAL_ALPHA_TIMER = 100,
   INITIAL_DEATH_TIMER = 85,
   INITIAL_FRICTION = 0.88,
@@ -111,4 +111,4 @@ document.body.addEventListener("keyup", function (e) {
   keys[e.keyCode] = false;
 });
 
-setTimeout(drawInstructions, 1); //let's the custom font load
+setTimeout(drawInstructions, 100); //let's the custom font load
