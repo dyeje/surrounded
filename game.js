@@ -111,4 +111,6 @@ document.body.addEventListener("keyup", function (e) {
   keys[e.keyCode] = false;
 });
 
-setTimeout(drawInstructions, 100); //let's the custom font load
+window.onload = function() {
+  setTimeout(drawInstructions, 100);
+};
