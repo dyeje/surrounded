@@ -6,6 +6,15 @@ function startGameText() {
   drawText("press space to start!", 500, 38);
 }
 
+function scoreDraw() {
+  ctx.globalAlpha = 1.0;
+  ctx.fillStyle = "#f2f2f2";
+  ctx.font = "22pt unlearne";
+  ctx.textAlign = "right";
+  ctx.fillText(score, 590, 28);
+  ctx.globalAlpha = 1.0;
+}
+
 function drawText(text, y, size, alpha) {
   alpha = alpha !== undefined ? alpha : 1.0;
 
