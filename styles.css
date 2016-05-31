@@ -26,3 +26,7 @@ body {
   margin-right: 0px;
   background-color: #3F6273;
 }
+
+audio {
+  display: none;
+}
