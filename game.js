@@ -117,4 +117,5 @@ document.body.addEventListener("keyup", function (e) {
 
 window.onload = function() {
   setTimeout(drawInstructions, 100);
+  musicToggleHandler();
 };
