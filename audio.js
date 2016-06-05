@@ -1,5 +1,5 @@
 function toggleMusic() {
-  var audioPlayer = document.getElementById("audio")
+  var audioPlayer = document.getElementById("audio");
   if (audioPlayer.paused) {
     audioPlayer.play();
   } else {
@@ -7,14 +7,22 @@ function toggleMusic() {
   }
 }
 
+function musicToggleText() {
+  var audioPlayer = document.getElementById("audio");
+  return audioPlayer.paused ? "Off" : "On";
+}
+
 function mouseInBottomRightCorner(e) {
   var canvasRect = canvas.getBoundingClientRect();
   var root = document.documentElement;
   var x = e.clientX - canvasRect.left - root.scrollLeft;
   var y = e.clientY - canvasRect.top - root.scrollTop;
-  var bottomRightCorner = SIDE_LENGTH - 30;
+  var bottomRightCorner = {
+    x: SIDE_LENGTH - 57,
+    y: SIDE_LENGTH - 30
+  }
 
-  return x > bottomRightCorner && y > bottomRightCorner;
+  return x > bottomRightCorner.x && y > bottomRightCorner.y;
 }
 
 function musicToggleHandler() {

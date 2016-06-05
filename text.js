@@ -15,6 +15,16 @@ function scoreDraw() {
   ctx.globalAlpha = 1.0;
 }
 
+function musicToggleDraw() {
+  ctx.globalAlpha = 1.0;
+  ctx.fillStyle = "#f2f2f2";
+  ctx.font = "16pt unlearne";
+  ctx.textAlign = "center";
+  ctx.fillText("Music", 569, 580);
+  ctx.fillText(musicToggleText(), 569, 595);
+  ctx.globalAlpha = 1.0;
+}
+
 function drawText(text, y, size, alpha) {
   alpha = alpha !== undefined ? alpha : 1.0;
 

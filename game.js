@@ -13,7 +13,6 @@ var canvas = document.getElementById("canvas"),
     deathTimer,
     gameTimeout;
 
-
 var //constants 
   PLAYER_COLOR = "#F2CE44",
   MAX_ENEMY_SIZE = 80,
@@ -71,11 +70,11 @@ function setupGame() {
 function update() {
   ctx.clearRect(0, 0, SIDE_LENGTH, SIDE_LENGTH);
 
-  playerMove();
+  if (!gameOver || deathTimer > 0) playerMove();
   playerDraw();
 
   for (i = 0; i < enemies.length; i++) {
-    enemyMove(enemies[i]);
+    if (!gameOver || deathTimer > 0)  enemyMove(enemies[i]);
     enemyDraw(enemies[i]);
   }
 
@@ -97,10 +96,9 @@ function update() {
   }
 
   scoreDraw();
+  musicToggleDraw();
 
-  if (deathTimer > 0) {
-    gameTimeout = window.setTimeout(update, updateInterval);
-  }
+  gameTimeout = window.setTimeout(update, updateInterval);
 }
 
 document.body.addEventListener("keydown", function (e) {
