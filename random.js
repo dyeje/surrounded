@@ -30,4 +30,4 @@ function randomStartingCoordinates(cardinalDirection, enemySize) {
   } else if (cardinalDirection === DIRECTIONS.left) {
     return {x: SIDE_LENGTH, y: getRandomInt(0, SIDE_LENGTH)};
   }
-} 
+}
